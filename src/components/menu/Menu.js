@@ -1,12 +1,15 @@
 import React, { Component } from "react";
 import {
-    BrowserRouter as Router,
-    Switch,
     Route,
     Link,
 } from "react-router-dom";
 
 const menus = [
+    {
+        name: "Call Api",
+        to: '/',
+        exact: true
+    },
     {
         name: "Trang chủ",
         to: '/',
@@ -25,7 +28,7 @@ const MenuLink = ({ label, to, activeOnlyWhenExact }) => {
             path="to"
             exact={activeOnlyWhenExact}
             children={({ match }) => {
-                var active = match ? 'active' : ""
+                // var active = match ? 'active' : ""
                 return (
                     <li className={match ? "active" : ""}>
                         <Link to={to} className="nav-link">{label}</Link>
@@ -45,6 +48,7 @@ class Menu extends Component {
                     <div className="container-fluid">
                         <div className="collapse navbar-collapse" id="navbarNav">
                             <ul className="navbar-nav">
+                            
                                {this.showMenu(menus)}
                             </ul>
                         </div>

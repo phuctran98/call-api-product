@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import ProductItem from "../../components/productItem/ProductItem";
 import ProducList from "../../components/productList/ProducList";
 import { connect } from "react-redux";
-import callApi from "../../utils/apiCaller";
 import { Link } from "react-router-dom";
+import * as Actions from "../../actions/index";
+
 class ProductListPage extends Component {
     constructor(props) {
         super(props)
@@ -12,39 +13,32 @@ class ProductListPage extends Component {
         }
     }
     componentDidMount() {
-        callApi('products', 'GET', null).then(res => {
-            this.setState({
-                products: res.data
-            })
-        })
+        // callApi('products', 'GET', null).then(res => {
+        //     this.props.fetchAllProducts(res.data)
+        // })
+        this.props.actFetchProductsRequest()
     }
     onDelete = (id) => {
-        var { products } = this.state
-        callApi(`products/${id}`, 'DELETE', null).then(res => {
-            if (res.status === 200) {
-                var index = this.findIndex(products, id)
-                console.log(index)
-                if (index !== -1) {
-                    products.splice(index, 1)
-                    this.setState({
-                        products: products
-                    })
-                }
-            }
-        })
+        this.props.actDeleteProductsRequest(id)
+        // var {products} = this.props
+        // // var { products } = this.state
+        // callApi(`products/${id}`, 'DELETE', null).then(res => {
+        //     if (res.status === 200) {
+        //         var index = this.findIndex(products, id)
+        //         console.log(index)
+        //         if (index !== -1) {
+        //             products.splice(index, 1)
+        //             this.setState({
+        //                 products: products
+        //             })
+        //         }
+        //     }
+        // })
     }
-    findIndex = (products, id) => {
-        var result = -1
-        products.forEach((product, index) => {
-            if (product.id === id) {
-                result = index
-            }
-        }
-        );
-        return result 
-    }
+
     render() {
-        var { products } = this.state
+        var {products} = this.props
+        // var { products } = this.state
         return (
             <div className="container">
                 <div>
@@ -77,5 +71,15 @@ const mapStateToProps = (state) => {
         products: state.products
     }
 }
+const mapDispatchToProps = (dispatch,props) =>{
+    return{
+        actFetchProductsRequest : () =>{
+            dispatch(Actions.actFetchProductsRequest())
+        },
+        actDeleteProductsRequest : (id) =>{
+            dispatch(Actions.actDeleteProductsRequest(id))
+        }
+    }
+}
 
-export default connect(mapStateToProps, null)(ProductListPage)
+export default connect(mapStateToProps, mapDispatchToProps)(ProductListPage)
